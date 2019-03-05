@@ -1,0 +1,12 @@
+{
+  "name": "runjs",
+  "version": "0.0.1",
+  "description": "RunJS is a javascript interpreter, which can run JS code in JS. ",
+  "main": "index.js",
+  "repository": "https://github.com/Youthink/runjs.git",
+  "author": "Youthink <hufy3651@foxmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "acorn": "^6.1.1"
+  }
+}
