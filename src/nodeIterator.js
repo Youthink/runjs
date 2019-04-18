@@ -1,40 +1,36 @@
-const Scope = require('./scope');
-
 const nodeHandler = {
-  Program (nodeIterator) {
+  Program(nodeIterator) {
     if (!nodeIterator.node.body) {
-      throw new Error(`canjs: not node type body.`);
+      throw new Error('canjs: not node type body.');
     }
 
-    nodeIterator.node.body.map(o => {
-      nodeIterator.traverse(o)
-    });
+    nodeIterator.node.body.map(nodeIterator.traverse);
   },
 
-  VariableDeclaration (nodeIterator) {
-    nodeIterator.node.declarations.map(o => {
+  VariableDeclaration(nodeIterator) {
+    nodeIterator.node.declarations.forEach(o => {
       const indentifier = o.id.name;
       const value = o.init ? nodeIterator.traverse(o.init) : undefined;
       nodeIterator.scope.setScope(indentifier, value);
     });
   },
 
-  Identifier (nodeIterator) {
+  Identifier(nodeIterator) {
     if (nodeIterator.node.name === 'undefined') {
-      return undefined
+      return undefined;
     }
-    return nodeIterator.scope.getScope(nodeIterator.node.name)
+    return nodeIterator.scope.getScope(nodeIterator.node.name);
   },
 
-  Literal (nodeIterator) {
+  Literal(nodeIterator) {
     return nodeIterator.node.value;
   },
 
-  ExpressionStatement (nodeIterator) {
+  ExpressionStatement(nodeIterator) {
     return nodeIterator.traverse(nodeIterator.node.expression);
   },
 
-  CallExpression (nodeIterator) {
+  CallExpression(nodeIterator) {
     const func = nodeIterator.traverse(nodeIterator.node.callee);
     const args = nodeIterator.node.arguments.map(arg => nodeIterator.traverse(arg));
 
@@ -45,27 +41,27 @@ const nodeHandler = {
     return func.apply(value, args);
   },
 
-  MemberExpression (nodeIterator) {
+  MemberExpression(nodeIterator) {
     const obj = nodeIterator.traverse(nodeIterator.node.object);
-    const name = nodeIterator.node.property.name;
+    const { name } = nodeIterator.node.property;
     return obj[name];
-  }
-}
+  },
+};
 
 class NodeIterator {
-  constructor (node, scope) {
+  constructor(node, scope) {
     this.node = node;
     this.scope = scope;
     this.nodeHandler = nodeHandler;
   }
 
-  traverse (node, scope) {
+  traverse(node, scope) {
     const nodeIterator = new NodeIterator(node, scope || this.scope);
-    const _eval = this.nodeHandler[node.type];
-    if (!_eval) {
+    const parse = this.nodeHandler[node.type];
+    if (!parse) {
       throw new Error(`canjs: Unknown node type "${node.type}".`);
     }
-    return _eval(nodeIterator);
+    return parse(nodeIterator);
   }
 }
 

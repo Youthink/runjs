@@ -20,7 +20,7 @@ class Runjs {
   }
 
   run() {
-    const a = this.nodeIterator.traverse(this.ast, new Scope());
+    this.nodeIterator.traverse(this.ast, new Scope());
   }
 }
 
