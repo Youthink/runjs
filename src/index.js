@@ -5,6 +5,7 @@
  */
 const { Parser } = require('acorn');
 const NodeIterator = require('./nodeIterator');
+const Scope = require('./scope');
 
 class Runjs {
   constructor(code = '') {
@@ -19,8 +20,7 @@ class Runjs {
   }
 
   run() {
-    const a = this.nodeIterator.traverse(this.ast);
-    console.log(a);
+    const a = this.nodeIterator.traverse(this.ast, new Scope());
   }
 }
 
