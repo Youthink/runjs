@@ -10,6 +10,7 @@ const nodeHandler = {
       nodeIterator.traverse(o)
     });
   },
+
   VariableDeclaration (nodeIterator) {
     nodeIterator.node.declarations.map(o => {
       const indentifier = o.id.name;
@@ -43,6 +44,7 @@ const nodeHandler = {
     }
     return func.apply(value, args);
   },
+
   MemberExpression (nodeIterator) {
     const obj = nodeIterator.traverse(nodeIterator.node.object);
     const name = nodeIterator.node.property.name;
