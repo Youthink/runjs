@@ -4,7 +4,7 @@ const nodeHandler = {
       throw new Error('canjs: not node type body.');
     }
 
-    nodeIterator.node.body.map(nodeIterator.traverse);
+    nodeIterator.node.body.map(o => nodeIterator.traverse(o)); // 不能用省略写法，traverse 可以传递带二个参数
   },
 
   VariableDeclaration(nodeIterator) {
